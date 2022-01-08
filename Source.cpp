@@ -8,13 +8,6 @@
 using namespace std;
 int main(int arg, char** argv) {
 	
-	char p[20][30]{ ' ' };
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 30; j++) {
-			p[i][j] = ' ';
-		}
-	}
-
 	const char * c = "<!-- <!DOCTYPE html> -->\
 						< html >\
 							<head>\
@@ -22,29 +15,48 @@ int main(int arg, char** argv) {
 								<meta name = 'viewport' content = 'width=device-width, initial-scale=1'>\
 								<title>Test</ title>\
 							</ head>\
-							<body color = '#911'>\
-								<p color = '#333'>\
-									Some text\
-									<span color = '#00A'> inside </ span>\
-									or \
-									<p> nested</ p>\
+							<body color = '#F00'>\
+								<p color = '#F0F'>\
+									Some text\n\
+									<span color = '#00F'> inside </ span> or\
 								</ p>\
+								<p color = '#aaa'> nested</ p>\
 							</ body>\
 						</ html>" + 0;
 	Parser prs((char * )c);
 	
 
 	Element* body = prs.parse();
-	body->m_width = WIN_WIDTH;
-	body->m_height = WIN_HEIGHT;
+	body->m_width = 320;//WIN_WIDTH;
+	body->m_height = 240;// WIN_HEIGHT;
 	Screen screen;
-	screen.fillRect(0, 0, 300 - 1, 400 - 1, KDColorPurple);
+	//screen.fillRect(0, 0, 300 - 1, 400 - 1, KDColorPurple);
 	//screen.strokeRect(0, 0, 300, 400, KDColorWhite)
-	body->show(p, screen, 0, 0);
-	screen.strokeRect(0, 0, 320, 240, KDColorOrange);
-	//screen.drawString("_", 20, 20, KDColorYellow, true);
+	body->layout();
+	body->print();
+	body->show(screen, 0, 0);
+	screen.strokeRect(-1, -1, 320+2, 240+2, KDColorOrange);
+	//screen.drawString("_", 20, 20, KDColorYellaow, true);
 	screen.update();
-	screen.delay(5000);
+
+
+
+	SDL_bool run = SDL_TRUE;
+	while (run) {
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+				case SDL_QUIT :
+					run = SDL_FALSE;
+					break;
+				default :
+					break;
+
+			}
+		}
+
+	}
+	//screen.delay(5000);
 	/*
 	Tokenizer tk((char *)c);
 	Token k = tk.popToken();

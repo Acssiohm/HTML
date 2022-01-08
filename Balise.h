@@ -34,7 +34,8 @@ public:
 		"div",
 		"input",
 		"unknown",
-		"Text"
+		"Text",
+		"Line"
 	};
 	enum class Balises {
 		html, head, body, link, meta, script, style, title,

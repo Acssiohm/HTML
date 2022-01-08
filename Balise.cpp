@@ -216,7 +216,7 @@ bool Balise::isInline() {
 		//Balises::select == m_name ||
 		//Balises::slot == m_name ||
 		//Balises::small == m_name ||
-		Balises::span == m_name ||
+		Balises::span == m_name ||	//66 route de tulipes
 		Balises::strong == m_name ||
 		Balises::sub == m_name ||
 		Balises::sup == m_name ||

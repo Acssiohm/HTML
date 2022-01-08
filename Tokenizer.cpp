@@ -41,7 +41,8 @@ Token Tokenizer::popToken() {
 	else {
 		return popText();
 	}
-
+	cout << "UNKNOWN TOKEN" << endl;
+	return Token();
 }
 Token Tokenizer::popAttribute() {
 	char* start = &m_text[m_pos];
@@ -71,6 +72,9 @@ Token Tokenizer::popText() {
 	}
 	if (m_text[m_pos] == 0) {
 		return Token(Token::Type::EOS);
+	}
+	if (length > last_len_bef_space) {
+		last_len_bef_space++;
 	}
 	Token t(Token::Type::Text);
 	t.setString(start, last_len_bef_space);

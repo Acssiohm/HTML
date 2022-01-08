@@ -30,6 +30,7 @@ public:
 		text_rect.y = y;
 		SDL_RenderCopy(renderer, text_texture, nullptr, &text_rect);
 		SDL_FreeSurface(text_surface);
+		update();
 	}
 	void delay(int ms) {
 		SDL_Delay(ms);
@@ -50,8 +51,13 @@ public:
 		rect.w = w;
 		rect.h = h;
 		SDL_RenderDrawRect(renderer, &rect);
+		update();
 	}
 	void fillRect(int x, int y, int w, int h, KDColor c, int a = SDL_ALPHA_OPAQUE) {
+	/*	int r = c.red();
+		int g = c.green();
+		int b = c.blue();*/
+		//cout << "color : ( " << c.red() << " , " << c.green() << " , " << c.blue() << " )" << endl;
 		SDL_SetRenderDrawColor(renderer, c.red(), c.green(), c.blue(), a);
 		SDL_Rect rect;
 		rect.x = x;
@@ -59,6 +65,7 @@ public:
 		rect.w = w;
 		rect.h = h;
 		SDL_RenderFillRect(renderer, &rect);
+		update();
 	}
 	~Screen() {
 		SDL_DestroyRenderer(renderer);
