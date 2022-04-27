@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 //#include <iostream>
-constexpr auto WIN_WIDTH = 800;
-constexpr auto WIN_HEIGHT = 600;
+constexpr int WIN_WIDTH = 800;
+constexpr int WIN_HEIGHT = 600;
 
 //SDL_Window* window = nullptr;
 //SDL_Renderer* renderer = nullptr;
@@ -18,9 +18,12 @@ public:
 	void update() {
 		SDL_RenderPresent(renderer);
 	}
-	void drawString(const char* s, int x, int y, KDColor c = KDColorBlack, bool largeFont = false) {
+	void drawString(const char* s, int x, int y , KDColor c = KDColorBlack, int length = -1 ,bool largeFont = false) {
 		TTF_Font* font = TTF_OpenFont((largeFont ? "LargeFont.ttf" :"SmallFont.ttf"), (largeFont ? 15:11));
-		auto text_surface = TTF_RenderText_Solid(font, s, { c.red(), c.green() ,c.blue(), 255 });
+		char* linkCopy = (char*) malloc( length == -1 ? (strlen(s) + 1) : length + 1 );
+		memcpy(linkCopy, s , length == -1 ? (strlen(s)) : length);
+		linkCopy[length == -1 ? (strlen(s)) : length] = 0;
+		auto text_surface = TTF_RenderText_Solid(font, linkCopy, { c.red(), c.green() ,c.blue(), 255 });
 		auto text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
 		
 		SDL_Rect text_rect;
@@ -30,6 +33,7 @@ public:
 		text_rect.y = y;
 		SDL_RenderCopy(renderer, text_texture, nullptr, &text_rect);
 		SDL_FreeSurface(text_surface);
+		free(linkCopy);
 		update();
 	}
 	void delay(int ms) {

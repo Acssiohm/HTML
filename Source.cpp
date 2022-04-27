@@ -3,6 +3,7 @@
 //#include "Tokenizer.h"
 #include "Parser.h"
 #include <SDL.h>
+#include "kandinsky.h"
 
 
 using namespace std;
@@ -18,7 +19,7 @@ int main(int arg, char** argv) {
 							<body color = '#F00'>\
 								<p color = '#F0F'>\
 									Some text\n\
-									<span color = '#00F'> inside </ span> or\
+									<span color = '#00F'>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
 								</ p>\
 								<p color = '#aaa'> nested</ p>\
 							</ body>\
@@ -34,7 +35,7 @@ int main(int arg, char** argv) {
 	//screen.strokeRect(0, 0, 300, 400, KDColorWhite)
 	body->layout();
 	body->print();
-	body->show(screen, 0, 0);
+	body->show(screen);
 	screen.strokeRect(-1, -1, 320+2, 240+2, KDColorOrange);
 	//screen.drawString("_", 20, 20, KDColorYellaow, true);
 	screen.update();

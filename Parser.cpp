@@ -19,31 +19,18 @@ Element* Parser::parse() {
 }
 
 void Parser::parseInsideBalise(Element* el) {
-	//Line* line = new Line();
+
 	while (!currentToken.isEndBaliseOf( el->m_tag) && currentToken.type() != Token::Type::EOS ) {
 		if (currentToken.type() == Token::Type::Text) {
 			Text* el2;
 			el2 = new Text();//Element(Balise::Balises::Text);
 			el2->setText(currentToken.text(), currentToken.length());
-			//el2->m_text = currentToken.text();
-			//el2->m_textlen = currentToken.length();
-		//	line->appendChild(el2);
 			el->appendChild(el2);
 		}
 		else if (currentToken.type() == Token::Type::Balise) {
 			Element* el2;
 			el2 = new Element(Balise(currentToken.text(), currentToken.length()));
-		//	if (el2->m_tag.isInline()){
-		//		line->appendChild(el2);
-		//	}
-		//	else {
-				
-		//		if (line->nb_childs > 0) {
-		//			el->appendChild(line);
-		//			line = new Line();
-		//		}
-				el->appendChild(el2);
-		//	}
+			el->appendChild(el2);
 			parseBalise(el2);
 			currentToken = m_tokenizer.popToken();
 			if (!el2->m_tag.isOrpheline()) {
@@ -52,9 +39,6 @@ void Parser::parseInsideBalise(Element* el) {
 		}
 		currentToken = m_tokenizer.popToken();
 	}
-	//if (line->nb_childs > 0) {
-	//	el->appendChild(line);
-	//}
 }
 void Parser::parseBalise(Element* el) {
 	currentToken = m_tokenizer.popToken();

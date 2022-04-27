@@ -1,5 +1,5 @@
 #pragma once
-#include"KDColor.h"
+#include "kandinsky.h"
 #include <iostream>
 #include "SDL_API.h"
 #include "Balise.h"
@@ -28,7 +28,7 @@ public:
 		for (int i = 0; i < nbSpaces; i++) {
 			cout << " ";
 		}
-		cout << m_tag << nb_childs << "  x :" << m_posX << " y :" << m_posY <<" min_width :" << minimalWidth() << " width :" << m_width << " height :" << m_height << endl;
+		cout << m_tag << nb_childs << "\tx :" << m_posX << "\ty :" << m_posY <<"\tmin_width :" << minimalWidth() << "\twidth :" << m_width << "\theight :" << m_height << endl;
 	}
 	virtual void print(int nbIndent = 0, int nbSpaces = 0) {
 		printMe(nbIndent, nbSpaces);
@@ -37,7 +37,7 @@ public:
 		}
 	}
 	
-	virtual void showMe( Screen& s, int x, int y);
+	virtual void showMe( Screen& s, KDPoint startingPosition);
 	virtual int minimalWidth() {
 		int w = 0;
 		for (int i = 0; i < nb_childs; i++) {
@@ -45,7 +45,7 @@ public:
 		}
 		return w;
 	}
-	virtual void show( Screen& s, int x, int y);
+	virtual void show( Screen& s, KDPoint startingPosition = KDPointZero);
 	int hex_to_int(char c);
 	void addAttribute(char* name, int len_n, char* value, int len_v);
 	virtual bool appendChild(Element* child);
@@ -55,14 +55,9 @@ public:
 		}
 		nb_childs = 0;
 	}
-	virtual void layout(int& x, int& y);
-	void layout() {
-		int x = 0;
-		int y = 0;
-		layout(x, y);
-	}
+	virtual KDPoint layout(KDPoint startingPosition = KDPointZero);
 //	private:
-	virtual int height_per_unit() { return m_height; }
+	virtual int height_per_unit() { return (nb_childs > 0 ? m_childs[nb_childs-1]->height_per_unit() : 0); }
 
 	public:
 	Balise m_tag;
@@ -93,11 +88,10 @@ public:
 
 	virtual int minimalWidth() override{ return strlen(m_text) * Sgw; }
 	void setText(char* c, int len);
-	virtual void showMe(Screen& s, int x, int y) override;
-	virtual void layout(int& x, int& y) override;
+	virtual void showMe(Screen& s,KDPoint startingPosition) override;
+	virtual KDPoint layout(KDPoint startingPosition) override;
 	int lastSpaceBefore(int pos);
 	int firstSpaceAfter(int pos);
-
 	int height_per_unit() override { return Sgh; }
 private :
 	char* m_text = nullptr;

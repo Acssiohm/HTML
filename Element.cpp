@@ -6,44 +6,56 @@
 using namespace std;
 
 
-void Element::layout(int& x, int& y){
-	m_posX = x;
-	m_posY = y;
+KDPoint Element::layout(KDPoint startingPosition){
+	m_posX = startingPosition.x();
+	m_posY = startingPosition.y();
+	
 	if(m_parent){
 		m_width = m_parent->m_width;
 	}
-	int currentX = x;
-	int currentY = y;
-	int lastHeight = 0;
-	for (int i = 0; i < nb_childs; i++) {
-		if (m_childs[i]->m_tag.isInline()) {
-			m_childs[i]->layout(currentX, currentY);
-		}
-		else {
-			if (currentX > m_posX) {
-				currentY += m_childs[i - 1]->height_per_unit();
-				currentX = m_posX;
-			}
-			m_childs[i]->layout(currentX, currentY);
-			if (currentX > m_posX) {
-				currentY += m_childs[i]->height_per_unit();
-				currentX = m_posX;
-			}
-		}
-	}
-	x = currentX;
-	y = currentY;
-	if (nb_childs > 0 && m_childs[nb_childs - 1]->m_tag.isInline()) {
-		currentX = m_posX;
-		currentY += m_childs[nb_childs - 1]->height_per_unit();
-	}
 	
-	if (m_parent) {
-		m_height = currentY - m_posY;  
+	KDPoint currentPos = startingPosition;
+
+	for (int i = 0; i < nb_childs; i++) {
+
+		// Inline elements are placed successively
+		if (m_childs[i]->m_tag.isInline()) {
+			currentPos = m_childs[i]->layout(currentPos);
+		}
+		// Meanwhile block elements has to be put on a new line
+		else {
+			// verify if it's already on a new line
+			if (currentPos.x() > m_posX && i > 0) {
+				currentPos.m_y += m_childs[i - 1]->height_per_unit();
+				currentPos.m_x = m_posX;
+			}
+
+			// Layout child
+			currentPos = m_childs[i]->layout(currentPos);
+
+			// put a new line after if it's not already at the beginning
+			if (currentPos.x() > m_posX && i < nb_childs-1) {
+				currentPos.m_y += m_childs[i]->height_per_unit();
+				currentPos.m_x = m_posX;
+			}
+		}
 	}
+
+	if (m_parent) { // body has fixed dimensions
+		m_height = currentPos.m_y - m_posY;
+		if (nb_childs > 0) {
+			m_height += m_childs[nb_childs - 1]->height_per_unit();
+		}
+	}
+	// Inline elements width is just from start to the end of his content 
+	if (m_tag.isInline() && m_posY != currentPos.y()) {
+		m_width = currentPos.x() - m_posX;
+	}
+
+	return currentPos;
 }
 int Text::lastSpaceBefore(int pos) {
-	for (size_t i = pos; i >= 0; i--)
+	for(int i = pos; i >= 0; i--)
 	{
 		if (isspace(m_text[i])) {
 			return i;
@@ -60,53 +72,68 @@ int Text::firstSpaceAfter(int pos) {
 	}
 	return strlen(m_text) - 1;
 }
-void Text::layout(int& x, int& y) {
-	
+KDPoint Text::layout(KDPoint startingPosition) {
+	// The position of the text is the position at wich it starts
+	m_posX = startingPosition.x();
+	m_posY = startingPosition.y();
+
+	// Just to have the values in local variables
 	int parentX = m_parent->m_posX;
 	int parentW = m_parent->m_width;
-	int firstLineW = parentX + parentW - x;
-	int max_nb_char_first_line = firstLineW / Sgw;
-	if (strlen(m_text) <= max_nb_char_first_line) {
-		m_posX = x;
-		m_posY = y;
-		m_height = Sgh;
-		m_width = strlen(m_text) * Sgw;
-		x += m_width;
-	}
-	else {
-		m_posX = parentX;
-		m_posY = y;
-		m_width = parentW;
-		int nb_line = 1;
-		int chars_left = strlen(m_text);
-		int lsbln = lastSpaceBefore(max_nb_char_first_line);
-		if (lsbln == -1) {
-			lsbln = firstSpaceAfter(max_nb_char_first_line);
-			nb_line++;
-		}
-		chars_left -= lsbln;
-		int nb_chars_per_line = parentW / Sgw;
-		x = 0;
-		while (chars_left) {
-			nb_line++;
-			if (chars_left <= nb_chars_per_line) {
-				x = chars_left * Sgw;
-				chars_left = 0;
-			}
-			else{
-				int pos = strlen(m_text) - chars_left;
-				lsbln = lastSpaceBefore(pos + nb_chars_per_line);
-				if (lsbln < pos) {
-					lsbln = firstSpaceAfter(pos + nb_chars_per_line);
-					nb_line++;
-				}
-				chars_left -= (lsbln - pos);
-			}
-		}
-		m_height = nb_line * Sgh;
-		y += m_height;
-	}
+	int text_len = strlen(m_text);
 
+	int firstLineW = parentW -  ( startingPosition.x() - parentX ); // = width - relative_x ( left_offset )
+	int max_nb_char_first_line = firstLineW / Sgw;
+	
+	// If it fits into the first line we are done
+	if (text_len <= max_nb_char_first_line) {
+		m_height = Sgh;
+		m_width = text_len * Sgw;
+		return KDPoint(startingPosition.x() + m_width, startingPosition.y() );
+	}
+	
+	// Multiple line text take all the parent's width
+	m_width = parentW;
+
+	// Starting at first character , first line
+	int nb_line = 0;
+	int pos = 0;
+
+	// Searching for the next space that splits the text into lines 
+	int splitting_space = lastSpaceBefore(max_nb_char_first_line);
+	nb_line++;
+	if (splitting_space == -1) { 
+		splitting_space = firstSpaceAfter(max_nb_char_first_line);
+		nb_line++; // if text is too big, it takes a whole new line
+	}
+	
+	pos += splitting_space;
+	int nb_chars_per_line = parentW / Sgw;
+		
+	while (pos < text_len) {
+		nb_line++;
+		// If there is space to fit everything else it's done
+		if (text_len <= nb_chars_per_line + pos) {
+			m_height = nb_line * Sgh;
+			return KDPoint(
+				parentX + (text_len - pos) * Sgw, // = origin + number_of_letters_left*letter_width 
+				startingPosition.y() + (nb_line - 1 ) * Sgh );
+		}
+
+		// Position of the beginning of the next line :
+		splitting_space = lastSpaceBefore(pos + nb_chars_per_line);
+		if (splitting_space < pos) {
+			splitting_space = firstSpaceAfter(pos + nb_chars_per_line);
+			nb_line++;
+		}
+
+		// We can remove the characters before the space
+		pos = splitting_space;
+	}
+	// Total height, is the height of a letter times the number of lines
+	m_height = nb_line * Sgh;
+	
+	return KDPoint(parentX + parentW, startingPosition.y() + (nb_line - 1) * Sgh);
 }
 
 int Element::hex_to_int(char c) {
@@ -119,39 +146,70 @@ int Element::hex_to_int(char c) {
 }
 
 
-void Text::showMe(Screen& s, int x, int y){
+void Text::showMe(Screen& s, KDPoint startingPosition ){
 	//s.fillRect(x, /*m_posY +*/ y + Sgh, strlen(m_text) * Sgw, 1, m_color);
-	s.drawString(m_text,m_posX + x, m_posY + y, KDColorBlack);
+
+	// Just to have the values in local variables
+	int parentX = m_parent->m_posX;
+	int parentW = m_parent->m_width;
+	int text_len = strlen(m_text);
+
+	int firstLineW = parentW - (startingPosition.x() - parentX); // = width - relative_x ( left_offset )
+	int max_nb_char_line = firstLineW / Sgw;
+	int pos = 0;
+
+	// If it fits in the first line we print it and we are done
+	if (text_len <= max_nb_char_line) {
+		s.drawString(m_text, m_posX + startingPosition.x(), m_posY + startingPosition.y(), KDColorBlack);
+		return;
+	}
+
+	int currentY = startingPosition.y();
+	int splitting_space = lastSpaceBefore(max_nb_char_line);
+
+	// Draws the first line
+	if (splitting_space == -1) { // Go to a new line if text is too long to fit
+		splitting_space = firstSpaceAfter(max_nb_char_line);
+		currentY += Sgh;
+	} 
+	s.drawString(m_text, m_posX + parentX, m_posY + currentY, KDColorBlack, splitting_space);
+	currentY += Sgh;
+	
+	pos += splitting_space;
+	max_nb_char_line = parentW / Sgh;
+	while (text_len > max_nb_char_line + pos) {
+		splitting_space = lastSpaceBefore(pos + max_nb_char_line);
+		
+		if (splitting_space == -1) { // Goes on a new line if necessary in order to draw the next line
+			splitting_space = firstSpaceAfter(pos + max_nb_char_line);
+			currentY += Sgh;
+		}
+		// Draws the next line
+		s.drawString(m_text + pos + 1, parentX, m_posY + currentY, KDColorBlack, splitting_space - 1);
+		currentY += Sgh;
+		
+		// Update the number of letters left to draw
+		pos += splitting_space;
+	}
+	//s.drawString(m_text, m_posX + x, m_posY + y, KDColorBlack);
+
+
 }
 
-void Element::showMe( Screen& s, int x, int y) {
+void Element::showMe( Screen& s,KDPoint startingPosition) {
 	if (m_tag.isBlock()) {
-		s.fillRect(m_posX + x, m_posY + y, 320, m_height, m_color);
+		s.fillRect(m_posX + startingPosition.x(), m_posY + startingPosition.y(), 320, m_height, m_color);
 	}
 	else {
-		s.fillRect(m_posX + x, m_posY + y, minimalWidth(), m_height, m_color);
+		s.fillRect(m_posX + startingPosition.x(), m_posY + startingPosition.y(), minimalWidth(), m_height, m_color);
 	}
 	//s.fillRect(m_posX + x, m_posY + y + 20, minimalWidth(), 2, m_color);
 }
-void Element::show( Screen& s, int x, int y) {
-	showMe(s, 0, 0);//x, y);
-	//int Hn = Sgh;
-	//int currentX =  x;
-	//int currentY =  y;
+void Element::show( Screen& s, KDPoint startingPosition) {
+	showMe(s, startingPosition);
 	for (int i = 0; i < nb_childs; i++) {
-		//m_childs[i]->m_height = Sgh;
-		//m_childs[i]->m_width = m_childs[i]->minimalWidth();// m_width / 10;
-	
-		//if (m_childs[i]->m_position == Position::relative || true) {
-
-		m_childs[i]->show(s, 0, 0);//x, currentY);
-		//currentY += m_childs[i]->m_height;
-
-
-			
-		
+		m_childs[i]->show(s, startingPosition);
 	}
-	//cout << "-----";
 }
 
 

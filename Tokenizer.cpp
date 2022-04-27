@@ -5,7 +5,7 @@ Token Tokenizer::popToken() {
 	while (isspace(m_text[m_pos])) { m_pos++; }
 	if (m_text[m_pos] == 0) {
 		return Token(Token::Type::EOS);
-	}
+	}   
 	if (m_text[m_pos] == '<' && m_text[m_pos + 1] == '!' && m_text[m_pos + 2] == '-' && m_text[m_pos + 3] == '-') {
 		return popComment();
 	}

@@ -14,56 +14,106 @@ const char* Balise::text() const {
 	case Balise::Balises::html:
 		return "[ Balise : html ]";
 	case Balise::Balises::head:
-		return "[ Balise : head ]";	case Balise::Balises::body:
-		return "[ Balise : body ]";	case Balise::Balises::link:
-		return "[ Balise : link ]";	case Balise::Balises::meta:
-		return "[ Balise : meta ]";	case Balise::Balises::script:
-		return "[ Balise : script ]";	case Balise::Balises::style:
-		return "[ Balise : style ]";	case Balise::Balises::title:
-		return "[ Balise : title ]";	case Balise::Balises::abbr:
-		return "[ Balise : abbr ]";	case Balise::Balises::blockquote:
-		return "[ Balise : blockquote ]";	case Balise::Balises::cite:
-		return "[ Balise : cite ]";	case Balise::Balises::q:
-		return "[ Balise : q ]";	case Balise::Balises::sup:
-		return "[ Balise : sup ]";	case Balise::Balises::sub:
-		return "[ Balise : sub ]";	case Balise::Balises::strong:
-		return "[ Balise : strong ]";	case Balise::Balises::em:
-		return "[ Balise : em ]";	case Balise::Balises::mark:
-		return "[ Balise : mark ]";	case Balise::Balises::h1:
-		return "[ Balise : h1 ]";	case Balise::Balises::h2:
-		return "[ Balise : h2 ]";	case Balise::Balises::h3:
-		return "[ Balise : h3 ]";	case Balise::Balises::h4:
-		return "[ Balise : h4 ]";	case Balise::Balises::h5:
-		return "[ Balise : h5 ]";	case Balise::Balises::h6:
-		return "[ Balise : h6 ]";	case Balise::Balises::img:
-		return "[ Balise : img ]";	case Balise::Balises::figure:
-		return "[ Balise : figure ]";	case Balise::Balises::figcaption:
-		return "[ Balise : figcaption ]";	case Balise::Balises::audio:
-		return "[ Balise : audio ]";	case Balise::Balises::video:
-		return "[ Balise : video ]";	case Balise::Balises::source:
-		return "[ Balise : source ]";	case Balise::Balises::a:
-		return "[ Balise : a ]";	case Balise::Balises::br:
-		return "[ Balise : br ]";	case Balise::Balises::p:
-		return "[ Balise : p ]";	case Balise::Balises::hr:
-		return "[ Balise : hr ]";	case Balise::Balises::address:
-		return "[ Balise : address ]";	case Balise::Balises::del:
-		return "[ Balise : del ]";	case Balise::Balises::ins:
-		return "[ Balise : ins ]";	case Balise::Balises::dfn:
-		return "[ Balise : dfn ]";	case Balise::Balises::kbd:
-		return "[ Balise : kbd ]";	case Balise::Balises::pre:
-		return "[ Balise : pre ]";	case Balise::Balises::progress:
-		return "[ Balise : progress ]";	case Balise::Balises::ul:
-		return "[ Balise : ul ]";	case Balise::Balises::ol:
-		return "[ Balise : ol ]";	case Balise::Balises::li:
-		return "[ Balise : li ]";	case Balise::Balises::dl:
-		return "[ Balise : dl ]";	case Balise::Balises::dt:
-		return "[ Balise : dt ]";	case Balise::Balises::dd:
-		return "[ Balise : dd ]";	case Balise::Balises::span:
-		return "[ Balise : span ]";	case Balise::Balises::div:
-		return "[ Balise : div ]";	case Balise::Balises::input:
-		return "[ Balise : input ]";	case Balise::Balises::Text:
-		return "[ Balise : TEXT ]";	default:
-		return "[ UNKNOWN BALISE ]";	}
+		return "[ Balise : head ]";
+	case Balise::Balises::body:
+		return "[ Balise : body ]";
+	case Balise::Balises::link:
+		return "[ Balise : link ]";
+	case Balise::Balises::meta:
+		return "[ Balise : meta ]";
+	case Balise::Balises::script:
+		return "[ Balise : script ]";
+	case Balise::Balises::style:
+		return "[ Balise : style ]";
+	case Balise::Balises::title:
+		return "[ Balise : title ]";
+	case Balise::Balises::abbr:
+		return "[ Balise : abbr ]";
+	case Balise::Balises::blockquote:
+		return "[ Balise : blockquote ]";
+	case Balise::Balises::cite:
+		return "[ Balise : cite ]";
+	case Balise::Balises::q:
+		return "[ Balise : q ]";
+	case Balise::Balises::sup:
+		return "[ Balise : sup ]";
+	case Balise::Balises::sub:
+		return "[ Balise : sub ]";
+	case Balise::Balises::strong:
+		return "[ Balise : strong ]";
+	case Balise::Balises::em:
+		return "[ Balise : em ]";
+	case Balise::Balises::mark:
+		return "[ Balise : mark ]";
+	case Balise::Balises::h1:
+		return "[ Balise : h1 ]";
+	case Balise::Balises::h2:
+		return "[ Balise : h2 ]";
+	case Balise::Balises::h3:
+		return "[ Balise : h3 ]";
+	case Balise::Balises::h4:
+		return "[ Balise : h4 ]";
+	case Balise::Balises::h5:
+		return "[ Balise : h5 ]";
+	case Balise::Balises::h6:
+		return "[ Balise : h6 ]";
+	case Balise::Balises::img:
+		return "[ Balise : img ]";
+	case Balise::Balises::figure:
+		return "[ Balise : figure ]";
+	case Balise::Balises::figcaption:
+		return "[ Balise : figcaption ]";
+	case Balise::Balises::audio:
+		return "[ Balise : audio ]";
+	case Balise::Balises::video:
+		return "[ Balise : video ]";
+	case Balise::Balises::source:
+		return "[ Balise : source ]";
+	case Balise::Balises::a:
+		return "[ Balise : a ]";
+	case Balise::Balises::br:
+		return "[ Balise : br ]";
+	case Balise::Balises::p:
+		return "[ Balise : p ]";
+	case Balise::Balises::hr:
+		return "[ Balise : hr ]";
+	case Balise::Balises::address:
+		return "[ Balise : address ]";
+	case Balise::Balises::del:
+		return "[ Balise : del ]";
+	case Balise::Balises::ins:
+		return "[ Balise : ins ]";
+	case Balise::Balises::dfn:
+		return "[ Balise : dfn ]";
+	case Balise::Balises::kbd:
+		return "[ Balise : kbd ]";
+	case Balise::Balises::pre:
+		return "[ Balise : pre ]";
+	case Balise::Balises::progress:
+		return "[ Balise : progress ]";
+	case Balise::Balises::ul:
+		return "[ Balise : ul ]";
+	case Balise::Balises::ol:
+		return "[ Balise : ol ]";
+	case Balise::Balises::li:
+		return "[ Balise : li ]";
+	case Balise::Balises::dl:
+		return "[ Balise : dl ]";
+	case Balise::Balises::dt:
+		return "[ Balise : dt ]";
+	case Balise::Balises::dd:
+		return "[ Balise : dd ]";
+	case Balise::Balises::span:
+		return "[ Balise : span ]";
+	case Balise::Balises::div:
+		return "[ Balise : div ]";
+	case Balise::Balises::input:
+		return "[ Balise : input ]";
+	case Balise::Balises::Text:
+		return "[ Balise : TEXT ]";
+	default:
+		return "[ UNKNOWN BALISE ]";
+	}
 }
 
 bool operator==(const Balise& b1, const Balise& b2) {
