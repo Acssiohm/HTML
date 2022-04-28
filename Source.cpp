@@ -19,9 +19,9 @@ int main(int arg, char** argv) {
 							<body color = '#F00'>\
 								<p color = '#F0F'>\
 									Some text\n\
-									<span color = '#00F'>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
+									<span style = 'background-color : #00F ; color : green ;' color = '#00F'>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
+								<p style = 'background-color : #aaa ;'> nested</ p>\
 								</ p>\
-								<p color = '#aaa'> nested</ p>\
 							</ body>\
 						</ html>" + 0;
 	Parser prs((char * )c);

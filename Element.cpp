@@ -3,6 +3,7 @@
 #include"KDColor.h"
 #include <iostream>
 #include "SDL_API.h"
+#include "Style.h"
 using namespace std;
 
 
@@ -223,6 +224,18 @@ void Element::addAttribute(char* name, int len_n, char* value, int len_v) {
 				m_color = KDColor::RGB888(r << 4, g << 4, b << 4);
 			}
 		}
+		if (name[0] == 's' && name[1] == 't' && name[2] == 'y' && name[3] == 'l' && name[4] == 'e') {
+			Style s(value, len_v);
+			m_style = s;
+			string bg_col = m_style.getValueOf("background-color");
+			if (bg_col.size() == 4 && bg_col[0] == '#') {
+				int r = hex_to_int(value[1]);
+				int g = hex_to_int(value[2]);
+				int b = hex_to_int(value[3]);
+				m_color = KDColor::RGB888(r << 4, g << 4, b << 4);
+			}
+		}
+
 	}
 	//cout << name << ":" << value << endl;
 }

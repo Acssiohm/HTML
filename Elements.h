@@ -3,6 +3,7 @@
 #include <iostream>
 #include "SDL_API.h"
 #include "Balise.h"
+#include "Style.h"
 using namespace std;
 
 constexpr int Sgw = 7, Sgh = 14;//, Lgw = 10, Lgh = 18;
@@ -15,7 +16,7 @@ public:
 	fixed
 	};
 	Element(Balise tag,int width = 340, int height = 20)
-		:m_tag(tag), m_height(height), m_width(width), m_color(KDColorBlue),m_parent(nullptr), m_position(Position::relative) {
+		:m_tag(tag), m_height(height), m_width(width), m_color(KDColorBlue),m_parent(nullptr), m_position(Position::relative), m_style() {
 		m_color = KDColorBlue;
 		if (m_tag.isDisplayable()) {
 			m_color = m_tag.defaultColor();
@@ -59,7 +60,8 @@ public:
 //	private:
 	virtual int height_per_unit() { return (nb_childs > 0 ? m_childs[nb_childs-1]->height_per_unit() : 0); }
 
-	public:
+public:
+	Style m_style;
 	Balise m_tag;
 	int m_posX = 0;
 	int m_posY = 0;
