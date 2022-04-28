@@ -229,9 +229,9 @@ void Element::addAttribute(char* name, int len_n, char* value, int len_v) {
 			m_style = s;
 			string bg_col = m_style.getValueOf("background-color");
 			if (bg_col.size() == 4 && bg_col[0] == '#') {
-				int r = hex_to_int(value[1]);
-				int g = hex_to_int(value[2]);
-				int b = hex_to_int(value[3]);
+				int r = hex_to_int(bg_col[1]);
+				int g = hex_to_int(bg_col[2]);
+				int b = hex_to_int(bg_col[3]);
 				m_color = KDColor::RGB888(r << 4, g << 4, b << 4);
 			}
 		}

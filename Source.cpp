@@ -16,12 +16,12 @@ int main(int arg, char** argv) {
 								<meta name = 'viewport' content = 'width=device-width, initial-scale=1'>\
 								<title>Test</ title>\
 							</ head>\
-							<body color = '#F00'>\
-								<p color = '#F0F'>\
+							<body style = 'background-color : #F00' >\
+								<p style = ' background-color : #F0F ;'>\
 									Some text\n\
-									<span style = 'background-color : #00F ; color : green ;' color = '#00F'>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
-								<p style = 'background-color : #aaa ;'> nested</ p>\
-								</ p>\
+									<span style = 'background-color : #00F ; '>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
+									<p style = 'background-color : #aaa ;'> nested</ p>\
+								</p>\
 							</ body>\
 						</ html>" + 0;
 	Parser prs((char * )c);
