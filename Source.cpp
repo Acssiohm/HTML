@@ -9,21 +9,18 @@
 using namespace std;
 int main(int arg, char** argv) {
 	
-	const char * c = "<!-- <!DOCTYPE html> -->\
-						< html >\
-							<head>\
-								<meta charset = 'utf-8'>\
-								<meta name = 'viewport' content = 'width=device-width, initial-scale=1'>\
-								<title>Test</ title>\
-							</ head>\
-							<body style = 'background-color : #F00' >\
-								<p style = ' background-color : #F0F ;'>\
-									Some text\n\
-									<span style = 'background-color : #00F ; '>inside </span> or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ\
-									<p style = 'background-color : #aaa ;'> nested</ p>\
-								</p>\
-							</ body>\
-						</ html>" + 0;
+	const char * c = R"(
+	<html>
+		<body style = "background-color: #F00 ; margin : 0; padding:0;width:320px;font-size: 13; ">
+			<p style = "background-color: #F0F ;margin:0; padding:0;">
+				Some text
+				<span style = "background-color: #0F0FFF ;margin:0; padding:0;"> inside </span>
+				or abcdefgh ijklmnop qrstuvw xyz1234567890ABCDEFGH IJKLMNOP QRTUVWYZ
+			</p>
+			<p style="background-color: #aaa;margin:0; padding:0;"> nested</p>
+		</body>
+	</html>
+	)";
 	Parser prs((char * )c);
 	
 
@@ -31,13 +28,11 @@ int main(int arg, char** argv) {
 	body->m_width = 320;//WIN_WIDTH;
 	body->m_height = 240;// WIN_HEIGHT;
 	Screen screen;
-	//screen.fillRect(0, 0, 300 - 1, 400 - 1, KDColorPurple);
-	//screen.strokeRect(0, 0, 300, 400, KDColorWhite)
+	KDPoint origin(100, 10);
 	body->layout();
 	body->print();
 	body->show(screen);
-	screen.strokeRect(-1, -1, 320+2, 240+2, KDColorOrange);
-	//screen.drawString("_", 20, 20, KDColorYellaow, true);
+	//screen.strokeRect(-1, -1, 320+2, 240+2, KDColorOrange);  
 	screen.update();
 
 
@@ -49,6 +44,34 @@ int main(int arg, char** argv) {
 			switch (event.type) {
 				case SDL_QUIT :
 					run = SDL_FALSE;
+					break;
+				case SDL_KEYUP:
+					if (event.key.keysym.sym == SDLK_SPACE) {
+						body->m_width ++;
+						body->m_height ++ ;
+						body->layout();
+						screen.fillRect(0, 0, 1000, 1000, KDColorBlack);
+						body->show(screen);
+						screen.update();
+
+					}
+					if (event.key.keysym.sym == SDLK_UP) {
+						body->m_width += 10;
+						body->m_height += 10;
+						body->layout();
+						screen.fillRect(0, 0, 1000, 1000, KDColorBlack);
+						body->show(screen);
+						screen.update();
+
+					}
+					if (event.key.keysym.sym == SDLK_DOWN) {
+						body->m_width -= 10;
+						body->m_height -= 10;
+						body->layout();
+						screen.fillRect(0, 0, 1000, 1000, KDColorBlack);
+						body->show(screen);
+						screen.update();   
+					}
 					break;
 				default :
 					break;

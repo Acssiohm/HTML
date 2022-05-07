@@ -8,7 +8,7 @@ class Style
 {
 public:
 
-	Style(char* css, size_t len)
+	Style(char* css, size_t len, Style * parent = nullptr, Style * default_style = nullptr ): m_parent(parent), m_default(default_style)
 	{
 		unsigned int pos = 0;
 		while (pos < len) {
@@ -42,15 +42,72 @@ public:
 				attrs[name] = value;
 			}
 		}
-		for (std::pair<std::string, std::string> p : attrs) {
-			std::cout << "name = '" << p.first << "'  value = '" << p.second << "' ;\n";
-		}
 	}
-	Style(){}
+
+	Style(Style* parent = nullptr, Style* default_style = nullptr) : m_parent(parent), m_default(default_style){}
+
+	KDColor color() {
+		KDColor result;
+		std::string result_string = getValueOf("color");
+		if (color_from_string(result_string, result)) {
+			return result;
+		}
+		return KDColorBlack;
+	}
+
+	KDColor background_color() {
+		KDColor result;
+		std::string result_string = getValueOf("background-color");
+		if (color_from_string(result_string, result)) {
+			return result;
+		}
+		return KDColorBlack;
+	}
 	std::string getValueOf(std::string name) {
-		return attrs[name];
+		try {
+			return attrs.at(name);
+		}
+		catch (std::out_of_range) {
+			return "";
+		}
+		
 	}
 private:
+	int hex_to_int(char c) {
+		if ('0' <= c && c <= '9')
+			return int(c) - int('0');
+		if ('A' <= c && c <= 'F')
+			return 10 + int(c) - int('A');
+		if ('a' <= c && c <= 'f')
+			return 10 + int(c) - int('a');
+		return -1;
+	}
+	bool color_from_string(std::string color_string, KDColor & result) {
+		if (color_string.size() != 4 && color_string.size() != 7) {
+			return false;
+		}
+		if (color_string[0] != '#') {
+			return false;
+		}
+		
+		int r = hex_to_int(color_string[1]) << 4;
+		if (color_string.size() == 7) {
+			r += hex_to_int(color_string[2]);
+		}
+		int g = hex_to_int(color_string[ (color_string.size() == 4 ? 2 : 3) ] ) << 4;
+		if (color_string.size() == 7) {
+			g += hex_to_int(color_string[4]);
+		}
+		int b = hex_to_int(color_string[ (color_string.size() == 4 ? 3 : 5) ] ) << 4;
+		if (color_string.size() == 7) {
+			r += hex_to_int(color_string[6]);
+		}
+
+		result = KDColor::RGB888( r , g , b );
+		return true;
+	}
 	std::map<std::string, std::string> attrs;
+	Style* m_parent;
+	Style* m_default;
 };
 

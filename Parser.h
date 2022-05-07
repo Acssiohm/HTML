@@ -5,18 +5,19 @@
 class Parser {
 public:
 	Parser(char* text) :m_tokenizer(text) {
+		m_body = new Element(Balise("body"));
 		currentToken = m_tokenizer.popToken();
-		//	nextToken = m_tokenizer.popToken();
+		
+	}
+	~Parser() {
+		delete m_body;
 	}
 
 	Element* parse();
 	void parseInsideBalise(Element* el);
 	void parseBalise(Element* el);
-	~Parser() {
-		delete m_body;
-	}
+
 	Element* m_body;
 	Token currentToken;
-	//	Token nextToken;
 	Tokenizer m_tokenizer;
 };

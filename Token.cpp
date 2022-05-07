@@ -2,24 +2,10 @@
 #include "Balise.h"
 
 bool Token::isBaliseOf( Balise b) {
-	return (is(Token::Type::Balise) && Balise(text(), length()) == b);
+	return is(Token::Type::Balise)  &&  Balise(text(), length()) == b;
 }
 bool Token::isEndBaliseOf( Balise b) {
-	return (is(Token::Type::EndBalise) && Balise(text(), length()) == b);
-}
-ostream& operator<<(ostream& os, const Token& t)
-{
-	os << "Token < " << t.type();
-	if (t.length()) {
-		os << " : '";
-		for (size_t i = 0; i < t.length(); i++) {
-			os << t.text()[i];
-		}
-		os << "' ";
-	}
-	os << " >";
-
-	return os;
+	return is(Token::Type::EndBalise)  &&  Balise(text(), length()) == b;
 }
 ostream& operator<<(ostream& os, const Token::Type& t)
 {
@@ -54,5 +40,20 @@ ostream& operator<<(ostream& os, const Token::Type& t)
 	default:
 		os << "Type : Unknown";
 	}
+	return os;
+}
+
+ostream& operator<<(ostream& os, const Token& t)
+{
+	os << "Token < " << t.type();
+	if (t.length()) {
+		os << " : '";
+		for (size_t i = 0; i < t.length(); i++) {
+			os << t.text()[i];
+		}
+		os << "' ";
+	}
+	os << " >";
+
 	return os;
 }

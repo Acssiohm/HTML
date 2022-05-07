@@ -9,7 +9,7 @@ constexpr int WIN_HEIGHT = 600;
 //SDL_Renderer* renderer = nullptr;
 class Screen {
 public:
-	Screen() :window(nullptr), renderer(nullptr) {
+	Screen(int width = WIN_WIDTH, int height = WIN_HEIGHT) :window(nullptr), renderer(nullptr) {
 		SDL_Init(SDL_INIT_VIDEO);
 		SDL_CreateWindowAndRenderer(WIN_WIDTH, WIN_HEIGHT, 0, &window, &renderer);
 		TTF_Init();
@@ -21,7 +21,7 @@ public:
 	void drawString(const char* s, int x, int y , KDColor c = KDColorBlack, int length = -1 ,bool largeFont = false) {
 		TTF_Font* font = TTF_OpenFont((largeFont ? "LargeFont.ttf" :"SmallFont.ttf"), (largeFont ? 15:11));
 		char* linkCopy = (char*) malloc( length == -1 ? (strlen(s) + 1) : length + 1 );
-		memcpy(linkCopy, s , length == -1 ? (strlen(s)) : length);
+		memcpy(linkCopy, s, length == -1 ? (strlen(s)) : length);
 		linkCopy[length == -1 ? (strlen(s)) : length] = 0;
 		auto text_surface = TTF_RenderText_Solid(font, linkCopy, { c.red(), c.green() ,c.blue(), 255 });
 		auto text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);

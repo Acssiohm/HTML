@@ -2,9 +2,7 @@
 #include "Balise.h"
 
 Element* Parser::parse() {
-	Element* el = new Element(Balise("body"));
-	if (m_body) { delete m_body; }
-	m_body = el;
+
 	while (!currentToken.isBaliseOf(Balise("body"))
 		&& !currentToken.is(Token::Type::EOS)) {
 		currentToken = m_tokenizer.popToken();
@@ -43,7 +41,7 @@ void Parser::parseInsideBalise(Element* el) {
 void Parser::parseBalise(Element* el) {
 	currentToken = m_tokenizer.popToken();
 	char* attr = nullptr;
-	int len_attr = 0;
+	size_t len_attr = 0;
 	bool has_eq = true;
 	while (currentToken.type() != Token::Type::BaliseEnd) {
 		if (currentToken.type() == Token::Type::Attribute) {
